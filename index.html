@@ -3,31 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wedding Invitation</title>
+    <title>Noy & Lara - Wedding Invitation</title>
     
-    <!-- Google Fonts for Elegant Typography -->
+    <!-- Google Fonts for Elegant Typography and Armenian Support -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Great+Vibes&family=Noto+Serif+Armenian:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           COLOR PALETTE & CONFIGURATION (Easily editable)
+           COLOR PALETTE & DESIGN VARIABLES (From Color_Pallet.png & Images)
            ========================================================================== */
         :root {
-            /* Background and Envelope Colors based on the visualization */
-            --bg-color: #eae7dc;         /* Soft, warm cream background */
-            --envelope-bg: #d8c3a5;     /* Main envelope body tone */
-            --envelope-dark: #bfa888;   /* Shadow/inner folds tone */
-            --envelope-flap: #e3d2ba;   /* Inside flap highlight tone */
-            --wax-seal-color: #6e5a44;  /* Deep elegant brown/olive wax seal */
-            
-            /* Typography Colors */
-            --text-primary: #3e362e;    /* Dark brown/charcoal for premium readability */
-            --text-muted: #8e7d6b;      /* Muted accent tone */
-            
-            /* Card & Details */
-            --card-bg: #fdfbf7;         /* Crisp, romantic off-white card stock */
+            /* Palette tones */
+            --bg-linen: #eae5d9;          /* The warm olive/linen cream background */
+            --envelope-outer: #cebea7;    /* Elegant textured kraft tone */
+            --envelope-inner: #bcae97;    /* Shadowed inside-fold tint */
+            --envelope-flap: #dacdb5;     /* Highlighted top flap color */
+            --olive-accent: #636b46;      /* The primary olive green brand color */
+            --wax-seal: #53483b;          /* Dark stamp color seen sealing the envelope */
+            --card-paper: #fcfbfa;        /* Bright premium cardstock background */
+            --text-dark: #2c2924;         /* Soft black for elegant readability */
+            --text-muted: #736d62;        /* Subdued text color */
             
             /* Fonts */
             --font-serif: 'Playfair Display', 'Noto Serif Armenian', serif;
@@ -44,375 +41,537 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-linen);
             font-family: var(--font-serif);
-            color: var(--text-primary);
+            color: var(--text-dark);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             overflow-x: hidden;
-            perspective: 1000px; /* Essential for 3D flap flip */
+            perspective: 1500px; /* Crucial for realistic 3D flap flip */
             padding: 20px;
         }
 
-        /* ==========================================================================
-           PHASE 1 & 2: THE ENVELOPE INTERACTION CONTAINER
-           ========================================================================== */
-        .wrapper {
+        /* Container keeping envelope & elements centered and proportional */
+        .invitation-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             position: relative;
+            transition: padding 0.6s ease;
         }
 
-        /* Pulse Invitation Text Overlay */
-        .instruction-text {
+        /* ==========================================================================
+           PHASE 1: THE CLOSED ENVELOPE (LANDING STATE)
+           ========================================================================== */
+        
+        /* Elegant Armenian Prompt */
+        .instruction-prompt {
             font-family: var(--font-serif);
             font-style: italic;
-            font-size: 1.2rem;
-            color: var(--text-primary);
-            margin-bottom: 25px;
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin-bottom: 30px;
             letter-spacing: 1px;
             text-align: center;
             opacity: 1;
             transform: translateY(0);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            animation: softPulse 2s infinite ease-in-out;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            animation: elegantPulse 2.5s infinite ease-in-out;
         }
 
-        @keyframes softPulse {
-            0%, 100% { opacity: 0.8; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.03); }
+        @keyframes elegantPulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
         }
 
-        /* The Envelope Base */
-        .envelope-container {
+        /* Envelope Box Construction */
+        .envelope-box {
             position: relative;
             width: 100%;
-            height: 280px;
-            background-color: var(--envelope-dark);
+            height: 260px;
+            background-color: var(--envelope-inner);
             border-radius: 4px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             cursor: pointer;
             transform-style: preserve-3d;
-            transition: transform 0.4s ease;
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .envelope-container:hover {
-            transform: translateY(-5px);
+        .envelope-box:hover {
+            transform: translateY(-4px);
         }
 
-        /* Common flap settings */
-        .flap {
+        /* Structural Flaps shapes */
+        .flap-base {
             position: absolute;
             width: 0;
             height: 0;
             border-style: solid;
-            z-index: 3;
         }
 
-        /* Top Flap (Flipped via JS/CSS) */
+        /* Top Flap configured for 3D flip hinge */
         .top-flap {
             top: 0;
             left: 0;
-            border-width: 140px 210px 0 210px; /* Half of width (420px) and height (280px) */
+            border-width: 130px 200px 0 200px;
             border-color: var(--envelope-flap) transparent transparent transparent;
             transform-origin: top center;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.3s;
-            z-index: 5; /* Starts on top of everything */
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.35s;
+            z-index: 5;
         }
 
-        /* Bottom & Side Folds (Creates the pouch) */
         .left-flap {
             bottom: 0;
             left: 0;
-            border-width: 140px 0 140px 210px;
-            border-color: transparent transparent transparent var(--envelope-bg);
+            border-width: 130px 0 130px 200px;
+            border-color: transparent transparent transparent var(--envelope-outer);
+            z-index: 4;
         }
 
         .right-flap {
             bottom: 0;
             right: 0;
-            border-width: 140px 210px 140px 0;
-            border-color: transparent var(--envelope-bg) transparent transparent;
+            border-width: 130px 200px 130px 0;
+            border-color: transparent var(--envelope-outer) transparent transparent;
+            z-index: 4;
         }
 
         .bottom-flap {
             bottom: 0;
             left: 0;
-            border-width: 0 210px 140px 210px;
-            border-color: transparent transparent var(--envelope-dark) transparent;
+            border-width: 0 200px 130px 200px;
+            border-color: transparent transparent var(--envelope-inner) transparent;
+            z-index: 4;
         }
 
-        /* Wax Seal Badge */
-        .wax-seal {
+        /* Decorative Center Wax Seal */
+        .wax-seal-badge {
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 50px;
-            height: 50px;
-            background-color: var(--wax-seal-color);
+            width: 52px;
+            height: 52px;
+            background-color: var(--wax-seal);
             border-radius: 50%;
-            transform: translate(-50%, -40%);
+            transform: translate(-50%, -30%);
             z-index: 6;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.2);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25), inset 0 2px 4px rgba(255,255,255,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255,255,255,0.4);
-            font-size: 1.2rem;
-            transition: opacity 0.4s ease, transform 0.4s ease;
+            color: rgba(255,255,255,0.3);
+            font-size: 1.1rem;
+            transition: opacity 0.3s ease, transform 0.4s ease;
+        }
+
+        /* Audio Indicator Pill from visualization */
+        .audio-pill {
+            position: absolute;
+            top: 25%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 7;
+            pointer-events: none;
+            transition: opacity 0.3s;
         }
 
         /* ==========================================================================
-           PHASE 3: THE CONTENT REVEAL CARD
+           PHASE 2 & 3: OPEN STATE CHANGES & INNER CONTENT COLLAGE
            ========================================================================== */
+        
+        /* The Card nestled inside the envelope pocket beforehand */
         .invitation-card {
             position: absolute;
             top: 10px;
-            left: 5%;
-            width: 90%;
-            background-color: var(--card-bg);
+            left: 4%;
+            width: 92%;
+            background-color: var(--card-paper);
             border-radius: 2px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            padding: 30px 20px;
-            z-index: 2; /* Sits inside the pocket initially */
-            transform: translateY(0) scale(0.95);
+            padding: 35px 24px;
+            z-index: 2;
             opacity: 0;
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
-            max-height: 250px;
+            transform: translateY(0) scale(0.95);
+            transition: transform 0.9s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.6s ease;
+            max-height: 200px;
             overflow: hidden;
         }
 
-        /* ==========================================================================
-           OPEN STATE TRIGGER (Applied via JavaScript)
-           ========================================================================== */
-        .wrapper.is-open .instruction-text {
+        /* Open Trigger Classes via Javascript */
+        .invitation-wrapper.is-open .instruction-prompt {
             opacity: 0;
-            transform: translateY(-10px);
+            transform: translateY(-15px);
             pointer-events: none;
         }
 
-        .wrapper.is-open .top-flap {
+        .invitation-wrapper.is-open .audio-pill {
+            opacity: 0;
+        }
+
+        .invitation-wrapper.is-open .top-flap {
             transform: rotateX(180deg);
-            z-index: 1; /* Drop behind so the card can slide out */
+            z-index: 1; /* Drops structural flap weight to background */
         }
 
-        .wrapper.is-open .wax-seal {
+        .invitation-wrapper.is-open .wax-seal-badge {
             opacity: 0;
-            transform: translate(-50%, -40%) scale(0.7);
+            transform: translate(-50%, -30%) scale(0.6);
             pointer-events: none;
         }
 
-        /* The Grand Reveal: Moves the card upwards out of the envelope */
-        .wrapper.is-open .invitation-card {
+        /* The Slide Out Expansion */
+        .invitation-wrapper.is-open .invitation-card {
             opacity: 1;
-            position: relative; /* Break out of absolute envelope confinement */
+            position: relative; 
             top: auto;
             left: auto;
             width: 100%;
-            max-height: 2000px; /* Allow fully expanded layout */
-            transform: translateY(-40px) scale(1);
-            margin-top: -120px; /* Smooth spacing transition */
+            max-height: 3000px; 
+            transform: translateY(-20px) scale(1);
+            margin-top: -100px;
             z-index: 10;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-            animation: cardFadeInElements 1s ease forwards;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.12);
         }
-        
-        /* Smooth scrolling container for mobile viewport constraints */
-        .wrapper.is-open {
-            padding-top: 120px;
-            padding-bottom: 50px;
+
+        .invitation-wrapper.is-open {
+            padding-top: 60px;
+            padding-bottom: 60px;
         }
 
         /* ==========================================================================
-           ELEGANT CARD INTERIOR & TYPOGRAPHY
+           VISUAL DETAILS & COLLAGE (Details_disk_visualization.png)
            ========================================================================== */
-        .card-inner {
+        
+        .card-layout {
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
+        }
+
+        /* Staggered load animation setups */
+        .stagger-item {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(25px);
         }
 
-        .wrapper.is-open .card-inner {
-            animation: fadeInUp 0.8s 0.5s forwards;
+        .invitation-wrapper.is-open .stagger-item {
+            animation: revealFadeUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
 
-        /* Initials Slot (e.g. A & M) */
-        .initials-badge {
-            font-family: var(--font-serif);
-            font-size: 1.5rem;
-            font-weight: 300;
-            border: 1px solid var(--text-muted);
-            padding: 8px 20px;
-            border-radius: 50%;
-            margin-bottom: 25px;
-            letter-spacing: 2px;
-            display: inline-block;
-        }
+        .invitation-wrapper.is-open .stagger-1 { animation-delay: 0.4s; }
+        .invitation-wrapper.is-open .stagger-2 { animation-delay: 0.6s; }
+        .invitation-wrapper.is-open .stagger-3 { animation-delay: 0.8s; }
+        .invitation-wrapper.is-open .stagger-4 { animation-delay: 1.0s; }
 
-        /* Primary Dynamic Image Slot */
-        .main-invitation-img {
-            width: 100%;
-            max-height: 380px;
-            object-fit: cover;
-            border-radius: 2px;
-            margin-bottom: 25px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-        }
-
-        /* Romantic Script Names */
-        .couple-names {
-            font-family: var(--font-script);
-            font-size: 3rem;
-            color: var(--text-primary);
-            margin-bottom: 15px;
-            line-height: 1.2;
-        }
-
-        .details-text {
-            font-size: 1rem;
-            line-height: 1.6;
-            letter-spacing: 0.5px;
-            margin-bottom: 25px;
-            color: var(--text-primary);
-        }
-
-        .date-highlight {
-            font-weight: 600;
-            font-size: 1.1rem;
-            border-top: 1px solid #e0dcd5;
-            border-bottom: 1px solid #e0dcd5;
-            padding: 8px 0;
-            margin: 15px 0;
-            width: 80%;
-        }
-
-        /* Secondary Grid / Multi-photo Styling matching context layout */
-        .visual-decor-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
-            width: 100%;
-        }
-
-        /* Secondary Vinyl/Disk Image Placeholder Slot */
-        .disk-invitation-img {
-            width: 90px;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            animation: spinDisk 20s linear infinite;
-        }
-
-        @keyframes spinDisk {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* ==========================================================================
-           ANIMATIONS & RESPONSIVE SCALING
-           ========================================================================== */
-        @keyframes fadeInUp {
+        @keyframes revealFadeUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        /* Hardware Accelerated Smooth Mobile Adaptation */
-        @media (max-width: 440px) {
-            .envelope-container {
+        /* Asymmetric Collage Graphics Container */
+        .collage-container {
+            position: relative;
+            width: 100%;
+            height: 290px;
+            margin-bottom: 30px;
+            margin-top: 15px;
+        }
+
+        /* 1. Monogram Initials Oval Frame */
+        .initials-oval-frame {
+            position: absolute;
+            top: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 105px;
+            height: 145px;
+            border: 2px solid #dfd8cb;
+            outline: 1px solid var(--olive-accent);
+            outline-offset: -5px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--card-paper);
+            z-index: 3;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .initials-text {
+            font-family: var(--font-script);
+            font-size: 2.4rem;
+            color: var(--olive-accent);
+            line-height: 1;
+        }
+        
+        .initials-ampersand {
+            font-family: var(--font-serif);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin: 2px 0;
+        }
+
+        /* 2. Main Invitation Graphic / Photo Right-aligned Card */
+        .main-invitation-graphic {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 150px;
+            height: 210px;
+            background: #fff;
+            padding: 10px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            border: 1px solid #f0ede6;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .main-invitation-graphic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 3. Secondary Decorative Vinyl/Disk image component */
+        .disk-component-wrapper {
+            position: absolute;
+            left: 5px;
+            top: 25px;
+            width: 120px;
+            height: 120px;
+            z-index: 1;
+        }
+
+        .disk-image-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            animation: slowVinylRotation 25s linear infinite;
+        }
+
+        @keyframes slowVinylRotation {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Polaroid Couple Overlaps from design visualization */
+        .polaroid-frame {
+            position: absolute;
+            background: #fff;
+            padding: 8px 8px 20px 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            border: 1px solid #f2eff8;
+        }
+
+        .polaroid-1 {
+            width: 115px;
+            height: 130px;
+            left: -10px;
+            bottom: 0;
+            transform: rotate(-8deg);
+            z-index: 4;
+        }
+
+        .polaroid-2 {
+            width: 125px;
+            height: 120px;
+            left: 90px;
+            bottom: -20px;
+            transform: rotate(4deg);
+            z-index: 4;
+        }
+
+        .polaroid-frame img {
+            width: 100%;
+            height: 82%;
+            object-fit: cover;
+        }
+
+        /* Typography & Text layout elements */
+        .wedding-header-title {
+            font-family: var(--font-serif);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .couple-names-headline {
+            font-family: var(--font-script);
+            font-size: 3.2rem;
+            color: var(--olive-accent);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .wedding-details-body {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: var(--text-dark);
+            letter-spacing: 0.3px;
+        }
+
+        .date-divider-lockup {
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-top: 1px solid #e8e3d9;
+            border-bottom: 1px solid #e8e3d9;
+            padding: 10px 0;
+            margin: 20px auto;
+            width: 85%;
+            letter-spacing: 1.5px;
+            color: var(--olive-accent);
+        }
+
+        .location-text {
+            font-style: italic;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================================================
+           RESPONSIVE VIEWPORT TWEAKS (Mobile-First)
+           ========================================================================== */
+        @media (max-width: 415px) {
+            .envelope-box {
                 height: 220px;
             }
+            /* Recalculate dynamic border triangular coordinates */
             .top-flap { border-width: 110px 180px 0 180px; }
             .left-flap { border-width: 110px 0 110px 180px; }
             .right-flap { border-width: 110px 180px 110px 0; }
             .bottom-flap { border-width: 0 180px 110px 180px; }
-            
-            .wrapper.is-open .invitation-card {
-                margin-top: -80px;
+
+            .invitation-wrapper.is-open .invitation-card {
+                margin-top: -85px;
             }
-            .couple-names { font-size: 2.5rem; }
+            .collage-container {
+                height: 260px;
+                transform: scale(0.9);
+            }
+            .couple-names-headline {
+                font-size: 2.8rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="wrapper" id="invitationWrapper">
+    <div class="invitation-wrapper" id="mainWrapper">
         
-        <!-- Phase 1 Text Prompt -->
-        <div class="instruction-text" id="instruction">Սեղմեք՝ բացելու համար</div>
+        <!-- Phase 1 Text Prompt Overlay -->
+        <h2 class="instruction-prompt" id="promptText">Սեղմեք՝ բացելու համար</h2>
 
-        <!-- The Interactive Envelope Container -->
-        <div class="envelope-container" id="envelope">
+        <!-- Interactive Envelope Container Structure -->
+        <div class="envelope-box" id="envelopeInteractive">
             
-            <!-- 3D Flipping Top Flap -->
-            <div class="flap top-flap"></div>
+            <!-- Audio Pill Indicator -->
+            <div class="audio-pill">
+                <span>🔊</span>
+            </div>
+
+            <!-- 3D Turning Top Fold -->
+            <div class="flap-base top-flap"></div>
             
-            <!-- Internal Invitation Card -->
+            <!-- Interior Invitation Elements -->
             <div class="invitation-card">
-                <div class="card-inner">
+                <div class="card-layout">
                     
-                    <!-- 1. Couple Initials Slot -->
-                    <div class="initials-badge">N & L</div>
+                    <!-- Header -->
+                    <span class="wedding-header-title stagger-item stagger-1">Save The Date</span>
                     
-                    <!-- 2. Main Invitation Graphic/Photo Slot -->
-                    <img src="invitation-main.jpg" alt="Wedding Celebration" class="main-invitation-img" onerror="this.src='https://picsum.photos/600/800?romantic=1'">
-                    
-                    <!-- Names & Details Section -->
-                    <h1 class="couple-names">Noy & Lara</h1>
-                    
-                    <div class="details-text">
-                        Սիրով հրավիրում ենք ձեզ կիսելու մեր կյանքի ամենահիշարժան օրվա բերկրանքը
-                        <div class="date-highlight">ՕԳՈՍՏՈՍԻ 12, 2026</div>
-                        Ժամը՝ 17:00-ին <br>
-                        Հասցե: Ռեստորանային համալիր, Երևան
+                    <!-- Collage Group mapping to Details_disk_visualization.png -->
+                    <div class="collage-container stagger-item stagger-2">
+                        
+                        <!-- 3. Secondary Decorative Vinyl Image Slot -->
+                        <div class="disk-component-wrapper">
+                            <img src="invitation-disk.jpg" alt="Vinyl Music Disk Track" class="disk-image-media" onerror="this.src='https://picsum.photos/150/150?grayscale'">
+                        </div>
+
+                        <!-- 1. Monogram Frame Slot -->
+                        <div class="initials-oval-frame">
+                            <span class="initials-text">N</span>
+                            <span class="initials-ampersand">&</span>
+                            <span class="initials-text">L</span>
+                        </div>
+
+                        <!-- 2. Main Invitation card-art Slot -->
+                        <div class="main-invitation-graphic">
+                            <img src="invitation-main.jpg" alt="Main Invitation Graphic Art" onerror="this.src='https://picsum.photos/300/420?sepia=1'">
+                        </div>
+
+                        <!-- Asymmetric Polaroid Image Extras -->
+                        <div class="polaroid-frame polaroid-1">
+                            <img src="couple-photo1.jpg" alt="Couple Moments" onerror="this.src='https://picsum.photos/150/150?blur=1'">
+                        </div>
+                        <div class="polaroid-frame polaroid-2">
+                            <img src="couple-photo2.jpg" alt="Couple Holding Hands" onerror="this.src='https://picsum.photos/150/150?sepia=2'">
+                        </div>
+
                     </div>
 
-                    <!-- 3. Decorative Secondary Grid Container (e.g. Vinyl / Accent details) -->
-                    <div class="visual-decor-container">
-                        <img src="invitation-disk.jpg" alt="Decorative Track" class="disk-invitation-img" onerror="this.src='https://picsum.photos/150/150?music=1'">
-                    </div>
+                    <!-- Names & Timeline Information -->
+                    <h1 class="couple-names-headline stagger-item stagger-3">Noy & Lara</h1>
                     
+                    <p class="wedding-details-body stagger-item stagger-4">
+                        Սիրով հրավիրում ենք ձեզ կիսելու մեր կյանքի ամենահիշարժան օրվա բերկրանքը
+                        
+                        <div class="date-divider-lockup stagger-item stagger-4">
+                            ՕԳՈՍՏՈՍԻ 12, 2026
+                        </div>
+                        
+                        <span class="stagger-item stagger-4">Ժամը՝ 17:00-ին</span><br>
+                        <span class="location-text stagger-item stagger-4">Հասցե՝ Ռեստորանային համալիր, Երևան</span>
+                    </p>
+
                 </div>
             </div>
 
-            <!-- Envelope Pocket Layers -->
-            <div class="flap left-flap"></div>
-            <div class="flap right-flap"></div>
-            <div class="flap bottom-flap"></div>
+            <!-- Foreground Pocket Enclosure Flaps -->
+            <div class="flap-base left-flap"></div>
+            <div class="flap-base right-flap"></div>
+            <div class="flap-base bottom-flap"></div>
 
-            <!-- Wax Seal Component -->
-            <div class="wax-seal">✦</div>
+            <!-- Central Wax Seal Badge -->
+            <div class="wax-seal-badge">✦</div>
             
         </div>
     </div>
 
     <!-- ==========================================================================
-       VANILLA JAVASCRIPT STATE ENGINE
+       VANILLA INTERACTION LOGIC
        ========================================================================== */ -->
     <script>
-        document.getElementById('envelope').addEventListener('click', function() {
-            const wrapper = document.getElementById('invitationWrapper');
+        document.getElementById('envelopeInteractive').addEventListener('click', function() {
+            const wrapper = document.getElementById('mainWrapper');
             
-            // Only trigger state transformation if not already active
+            // Trigger beautiful animations transitions sequentially if closed
             if (!wrapper.classList.contains('is-open')) {
                 wrapper.classList.add('is-open');
                 
-                // Allow card context to gracefully establish native scrolling room after slide animation completes
+                // Switch cursor state smoothly once expanded to prevent clipping issues
                 setTimeout(() => {
-                    document.getElementById('envelope').style.cursor = 'default';
-                }, 600);
+                    document.getElementById('envelopeInteractive').style.cursor = 'default';
+                }, 750);
             }
         });
     </script>

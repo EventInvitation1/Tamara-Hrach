@@ -256,9 +256,9 @@
 
             <!-- Staggered Layer Elements Portfolio -->
             
-            <!-- 1. The Rotating Vinyl Asset Layer -->
+            <!-- 1. The Rotating Vinyl Asset Layer (With alternate fallback if renamed webp encoding fails) -->
             <div class="collage-asset asset-vinyl">
-                <img src="vinil.png" alt="Spinning Vinyl Soundtrack Record" class="vinyl-spin-layer">
+                <img src="vinil.png" onerror="this.onerror=null; this.src='vinil.webp';" alt="Spinning Vinyl Soundtrack Record" class="vinyl-spin-layer">
             </div>
 
             <!-- 2. Main Save the Date Structural Text Card -->

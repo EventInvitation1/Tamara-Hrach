@@ -3,42 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wedding Invitation - Noy & Lara</title>
+    <title>Noy & Lara - Wedding Invitation</title>
     
-    <!-- Premium Google Fonts for Elegant Typography supporting Armenian -->
+    <!-- Premium Typography via Google Fonts supporting Serif, Display, and Script variations -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Noto+Serif+Armenian:wght@300;400;600&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500&family=Montserrat:wght@300;400&family=Noto+Serif+Armenian:wght@300;400&family=Playfair+Display:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================================================
-           DESIGN VARIABLES (Extracted directly from image_2.png & Context)
+           DESIGN SYSTEM & SPECIFIC PALETTE CONSTANTS
            ========================================================================== */
         :root {
-            /* Screen & Background */
-            --bg-screen: #f5f2eb;             /* Soft off-white studio background */
-            --card-paper: #fdfcfb;            /* Premium cardstock white */
+            /* 1. Phone internal screen background color override */
+            --bg-cream: #eae5d9;             
             
-            /* Realistic Envelope Hues from image_2.png */
-            --env-base: #e5dec9;              /* Textured light cream/beige main surface */
-            --env-shadow: #cbbb9e;            /* Inner deep shadow depth color */
-            --env-flap-outer: #ede6d3;        /* Slightly lighter highlighted outer flap */
-            --env-flap-inner: #d7cdb3;        /* Tinted tone when flipped to back */
-            --wax-seal-tone: #d9d3be;         /* Monochromatic champagne wax seal */
-            --wax-seal-border: #c8bd9f;       /* Inner definition ridge of the seal */
+            /* 5. Custom Envelope Hex Overrides & Lining Properties */
+            --env-core: #a8a58d;              /* Required override core hex */
+            --env-lining: #dacdb5;           /* Beige interior paper lining from image_2.png */
+            --env-shadow-dark: #8c8973;      /* Fold boundary shadow accents */
+            --wax-seal-gold: #c3b59b;        /* Champagne gold stamp color tone */
             
-            /* Typography & Layout Brand Accents */
-            --olive-accent: #616943;          /* Deep elegant olive green details */
-            --text-dark: #2d2a25;             /* High contrast soft charcoal */
-            --text-muted: #797163;            /* Warm muted tone */
+            /* Structural Variables */
+            --card-base: #fcfbfa;            
+            --text-dark: #2c2924;            
+            --text-muted: #736d62;           
             
-            /* System Typography */
+            /* Font Definitions */
             --font-serif: 'Playfair Display', 'Noto Serif Armenian', serif;
-            --font-script: 'Great Vibes', cursive;
+            --font-app-url: 'Cinzel', serif;
+            --font-sans: 'Montserrat', sans-serif;
         }
 
         /* ==========================================================================
-           BASE SETUP & RESET
+           RESET & COMPONENT CANVAS WRAPPERS
            ========================================================================== */
         * {
             box-sizing: border-box;
@@ -47,512 +45,460 @@
         }
 
         body {
-            background-color: var(--bg-screen);
-            font-family: var(--font-serif);
-            color: var(--text-dark);
-            min-height: 100vh;
+            background-color: #1a1917; /* Dark framing presentation tone for hosting */
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: hidden;
-            perspective: 2000px; /* Essential depth scale for 3D flap rotations */
-            padding: 20px;
+            min-height: 100vh;
+            overflow: hidden;
+            font-family: var(--font-serif);
         }
 
-        /* Mobile Device Perspective Container */
-        .device-viewport {
-            width: 100%;
-            max-width: 410px;
+        /* Emulated Mobile Web Browser Viewport Container */
+        .phone-viewport {
+            width: 100vw;
+            height: 100vh;
+            max-width: 420px;
+            max-height: 860px;
+            background-color: var(--bg-cream);
             position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            transition: padding-top 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            border-radius: 12px;
         }
 
         /* ==========================================================================
-           PHASE 1: LANDING STATE & ENVELOPE DESIGN
+           FEATURE 2: EXTREME TOP ABSOLUTE HEADER PANEL
            ========================================================================== */
-        
-        /* Elegant Armenian Text Prompt Overlay */
-        .interaction-prompt {
+        .app-header-url {
+            position: absolute;
+            top: 40px; /* Shifted elegantly below native status bar heights */
+            left: 0;
+            width: 100%;
+            text-align: center;
+            font-family: var(--font-app-url);
+            font-size: 0.85rem;
+            letter-spacing: 2.5px;
+            color: var(--text-muted);
+            text-transform: lowercase;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        /* Phase 1 Overlay Instruction Hint */
+        .tap-instruction {
+            position: absolute;
+            bottom: 60px;
+            left: 0;
+            width: 100%;
+            text-align: center;
             font-family: var(--font-serif);
             font-style: italic;
-            font-size: 1.3rem;
+            font-size: 1.15rem;
             color: var(--text-dark);
-            margin-bottom: 35px;
             letter-spacing: 0.5px;
-            text-align: center;
-            opacity: 1;
-            transform: translateY(0);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            animation: softPulse 2.5s infinite ease-in-out;
-            z-index: 20;
+            z-index: 40;
+            transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            animation: elegantPulse 2.5s infinite ease-in-out;
         }
 
-        @keyframes softPulse {
-            0%, 100% { opacity: 0.75; transform: translateY(0) scale(1); }
-            50% { opacity: 1; transform: translateY(-2px) scale(1.02); }
+        @keyframes elegantPulse {
+            0%, 100% { opacity: 0.6; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
         }
 
-        /* Structural 3D Wrapper for Envelope pocket layers */
-        .envelope-wrapper {
+        /* ==========================================================================
+           FEATURE 3 & 4: CENTRALIZED SCALED ENVELOPE STRUCTURAL CLUSTER
+           ========================================================================== */
+        .envelope-cluster-root {
             position: relative;
-            width: 100%;
-            height: 250px;
-            background-color: var(--env-shadow);
-            border-radius: 6px;
-            box-shadow: 0 15px 40px rgba(45, 42, 37, 0.08);
+            width: 360px;
+            height: 240px;
+            /* 4. Scaled down to 78% for dynamic padding negative space */
+            transform: scale(0.78); 
+            transform-origin: center center;
             cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .envelope-wrapper:hover {
-            transform: scale(1.01) translateY(-2px);
+        /* Base Envelope Construction Layer Backing */
+        .envelope-pocket-back {
+            position: absolute;
+            inset: 0;
+            background-color: var(--env-core);
+            border-radius: 4px;
+            box-shadow: 0 10px 30px rgba(44, 41, 36, 0.12);
+            z-index: 5;
         }
 
-        /* Precise 3D Layer Elements using absolute clip-paths for high-density modern viewports */
-        .env-layer {
+        /* Geometrical Pocket Enclosure Flaps styling via modern clip-paths */
+        .flap-piece {
             position: absolute;
             inset: 0;
             width: 100%;
             height: 100%;
-        }
-
-        /* Top Flap Component (Engineered for 3D flip hinge transformation) */
-        .env-flap-top {
-            background-color: var(--env-flap-outer);
-            clip-path: polygon(0 0, 100% 0, 50% 62%);
-            transform-origin: top center;
-            z-index: 5;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s ease, z-index 0.1s 0.35s;
-            box-shadow: inset 0 -2px 5px rgba(0,0,0,0.03);
-        }
-
-        /* Front Pocket Folds (Overlap Arrangement matching image_2.png) */
-        .env-flap-left {
-            background-color: var(--env-base);
-            clip-path: polygon(0 0, 52% 50%, 0 100%);
-            z-index: 3;
-        }
-
-        .env-flap-right {
-            background-color: var(--env-base);
-            clip-path: polygon(100% 0, 100% 100%, 48% 50%);
-            z-index: 3;
-        }
-
-        .env-flap-bottom {
-            background-color: var(--env-base);
-            clip-path: polygon(0 100%, 100% 100%, 50% 48%);
-            z-index: 4;
-            box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.02);
-        }
-
-        /* High Fidelity Champagne Wax Seal from image_2.png */
-        .wax-seal {
-            position: absolute;
-            top: 62%;
-            left: 50%;
-            width: 54px;
-            height: 54px;
-            background-color: var(--wax-seal-tone);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 6;
-            box-shadow: 
-                0 4px 10px rgba(0,0,0,0.12), 
-                inset 0 2px 4px rgba(255,255,255,0.4),
-                inset 0 -2px 4px rgba(0,0,0,0.08);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.3s ease, transform 0.4s ease;
-        }
-
-        .wax-seal-inner {
-            width: 40px;
-            height: 40px;
-            border: 1px dashed var(--wax-seal-border);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.1rem;
-            color: rgba(45, 42, 37, 0.35);
-            text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
-        }
-
-        /* ==========================================================================
-           PHASE 2 & 3: INTERACTIVE OPENING & REVELATION CARD
-           ========================================================================== */
-
-        /* The Internal Invitation Base Container nestled in background initially */
-        .invitation-card {
-            position: absolute;
-            top: 10px;
-            left: 4%;
-            width: 92%;
-            background-color: var(--card-paper);
-            border-radius: 4px;
-            padding: 40px 24px;
-            z-index: 2;
-            opacity: 0;
-            transform: translateY(0) scale(0.95);
-            transition: transform 0.9s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
-            max-height: 180px;
-            overflow: hidden;
-        }
-
-        /* STATE STATE ENGINE TRANSFORMS (Fires via Javascript Action) */
-        
-        .device-viewport.is-open .interaction-prompt {
-            opacity: 0;
-            transform: translateY(-10px);
+            z-index: 15;
             pointer-events: none;
         }
 
-        /* 3D Flap Pivot Turn Engine */
-        .device-viewport.is-open .env-flap-top {
-            transform: rotateX(180deg);
-            background-color: var(--env-flap-inner);
-            z-index: 1; /* Shifts behind the hierarchy stack */
+        .left-fold {
+            background-color: var(--env-core);
+            clip-path: polygon(0 0, 51% 50%, 0 100%);
+            filter: brightness(0.96);
         }
 
-        .device-viewport.is-open .wax-seal {
+        .right-fold {
+            background-color: var(--env-core);
+            clip-path: polygon(100% 0, 100% 100%, 49% 50%);
+            filter: brightness(0.96);
+        }
+
+        .bottom-fold {
+            background-color: var(--env-core);
+            clip-path: polygon(0 100%, 100% 100%, 50% 46%);
+            filter: brightness(0.92);
+        }
+
+        /* 5. Top Flap configured with realistic shadow projection and a dynamic open tint */
+        .top-flap-hinge {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--env-lining);
+            clip-path: polygon(0 0, 100% 0, 50% 56%);
+            transform-origin: top center;
+            z-index: 20;
+            /* 5. Shadow accent highlighting slightly open physical state gap */
+            filter: drop-shadow(0 4px 5px rgba(0, 0, 0, 0.15));
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), filter 0.5s ease;
+        }
+
+        /* ==========================================================================
+           PHASE 3: POP-OUT REVELATION INNER COLLAGE ELEMENTS
+           ========================================================================== */
+        .invitation-inner-content {
+            position: absolute;
+            inset: 5px 15px;
+            z-index: 10;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transform: translateY(0);
+        }
+
+        /* Core Rectangle Save The Date Layout Card */
+        .rect-save-date-card {
+            position: absolute;
+            right: 0;
+            top: -15px;
+            width: 145px;
+            height: 215px;
+            background-color: var(--card-base);
+            padding: 16px 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            border: 1px solid #f2eee5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .card-std-tag {
+            font-family: var(--font-sans);
+            font-size: 0.55rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .card-names {
+            font-family: var(--font-serif);
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .card-date {
+            font-family: var(--font-sans);
+            font-size: 0.65rem;
+            font-weight: 400;
+            border-top: 1px solid #e2ded4;
+            border-bottom: 1px solid #e2ded4;
+            padding: 4px 0;
+            width: 90%;
+            letter-spacing: 1px;
+            color: var(--text-dark);
+        }
+
+        /* Vinyl Record Decorative Graphic Asset Plate */
+        .vinyl-record-disc {
+            position: absolute;
+            left: -5px;
+            top: 15px;
+            width: 125px;
+            height: 125px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #2d2a24 20%, #1a1815 21%, #282520 40%, #11100e 41%, #221f1a 70%);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .vinyl-inner-label {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--bg-cream);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        /* Small White Oval Monogram Initials Frame */
+        .oval-monogram-badge {
+            position: absolute;
+            top: 25px;
+            left: 80px;
+            width: 90px;
+            height: 120px;
+            border: 2px solid #e6dfd3;
+            outline: 1px solid var(--text-muted);
+            outline-offset: -4px;
+            border-radius: 50%;
+            background-color: var(--card-base);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+
+        .monogram-text {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+        
+        .monogram-divider {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin: 1px 0;
+        }
+
+        /* Polaroid Couple Framed Elements Layout Stack Overlap */
+        .polaroid-wrapper {
+            position: absolute;
+            background-color: #ffffff;
+            padding: 6px 6px 16px 6px;
+            box-shadow: 0 8px 20px rgba(44, 41, 36, 0.08);
+            border: 1px solid #f5f2eb;
+        }
+
+        .polaroid-wrapper img {
+            width: 100%;
+            height: 82%;
+            object-fit: cover;
+        }
+
+        .polaroid-left {
+            width: 110px;
+            height: 120px;
+            left: -20px;
+            bottom: -35px;
+            transform: rotate(-8deg);
+        }
+
+        .polaroid-right {
+            width: 115px;
+            height: 115px;
+            left: 75px;
+            bottom: -50px;
+            transform: rotate(4deg);
+        }
+
+        /* Elegant Ornate Initials Golden Stamp/Seal Placement */
+        .golden-wax-seal {
+            position: absolute;
+            top: 56%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            background-color: var(--wax-seal-gold);
+            border-radius: 50%;
+            z-index: 30;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-serif);
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.15);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        /* ==========================================================================
+           ANIMATED EXPANSION OVERRIDE INTERACTION ENGINE
+           ========================================================================== */
+        
+        /* Actions triggered when state transitions to active (.is-open) */
+        .phone-viewport.is-open .tap-instruction {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Central Scale Adjustment on Open: Elevates presence to fit canvas width gracefully */
+        .phone-viewport.is-open .envelope-cluster-root {
+            transform: scale(0.95) translateY(40px);
+        }
+
+        /* 3D Flap opens completely up and projects inverted background shadow positioning */
+        .phone-viewport.is-open .top-flap-hinge {
+            transform: rotateX(180deg);
+            z-index: 8;
+            filter: drop-shadow(0 -5px 6px rgba(0, 0, 0, 0.08));
+        }
+
+        /* Seal gracefully drops out of spatial visibility context */
+        .phone-viewport.is-open .golden-wax-seal {
             opacity: 0;
             transform: translate(-50%, -50%) scale(0.6);
             pointer-events: none;
         }
 
-        /* The Grand Pop-out Reveal Engine */
-        .device-viewport.is-open .invitation-card {
-            opacity: 1;
-            position: relative;
-            top: auto;
-            left: auto;
+        /* Cluster elements travel fluidly vertically outside the envelope slot container pocket */
+        .phone-viewport.is-open .invitation-inner-content {
+            transform: translateY(-135px);
+        }
+
+        /* Extended Armenian Detail Panel inside viewport container */
+        .expanded-details-panel {
+            position: absolute;
+            bottom: -120px;
+            left: 0;
             width: 100%;
-            max-height: 2500px;
-            transform: translateY(-20px) scale(1);
-            margin-top: -90px;
-            z-index: 10;
-            box-shadow: 0 20px 45px rgba(45, 42, 37, 0.1);
-        }
-
-        .device-viewport.is-open {
-            padding-top: 40px;
-            padding-bottom: 60px;
-        }
-
-        /* ==========================================================================
-           STAGGERED MULTI-MEDIA COLLAGE STRUCTURE
-           ========================================================================== */
-        
-        .card-content-cluster {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             text-align: center;
-        }
-
-        /* Animation Keyframe Handlers */
-        .staggered-entry {
+            padding: 0 30px;
             opacity: 0;
             transform: translateY(20px);
+            transition: opacity 0.6s ease 0.5s, transform 0.6s ease 0.5s;
+            pointer-events: none;
         }
 
-        .device-viewport.is-open .staggered-entry {
-            animation: elegantFadeUp 0.85s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        .phone-viewport.is-open .expanded-details-panel {
+            opacity: 1;
+            transform: translateY(0);
+            bottom: 45px;
         }
 
-        .delay-1 { animation-delay: 0.4s; }
-        .delay-2 { animation-delay: 0.6s; }
-        .delay-3 { animation-delay: 0.8s; }
-        .delay-4 { animation-delay: 1.0s; }
-
-        @keyframes elegantFadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Asymmetric Layout Geometry Setup */
-        .collage-viewport-frame {
-            position: relative;
-            width: 100%;
-            height: 280px;
-            margin: 20px 0 25px 0;
-        }
-
-        /* Element 1: Small White Oval Monogram Frame */
-        .oval-monogram-badge {
-            position: absolute;
-            top: 40px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 135px;
-            border: 2px solid #eadecc;
-            outline: 1px solid var(--olive-accent);
-            outline-offset: -5px;
-            border-radius: 50%;
-            background-color: var(--card-paper);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 3;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-        }
-
-        .monogram-char {
-            font-family: var(--font-script);
-            font-size: 2.2rem;
-            color: var(--olive-accent);
-            line-height: 0.9;
-        }
-
-        .monogram-ampersand {
-            font-family: var(--font-serif);
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin: 2px 0;
-        }
-
-        /* Element 2: Vinyl Record Component Slot */
-        .vinyl-record-wrapper {
-            position: absolute;
-            left: 10px;
-            top: 20px;
-            width: 125px;
-            height: 125px;
-            z-index: 1;
-        }
-
-        .vinyl-asset-media {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-            animation: slowGrooveSpin 20s linear infinite;
-        }
-
-        @keyframes slowGrooveSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Element 3: Main Save the Date Card Graphic Alignment */
-        .main-save-date-panel {
-            position: absolute;
-            right: 0;
-            top: 0;
-            width: 145px;
-            height: 205px;
-            background: #fff;
-            padding: 8px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.04);
-            border: 1px solid #f2eee6;
-            z-index: 2;
-        }
-
-        .main-save-date-panel img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        /* Asymmetric Overlay Polaroids */
-        .polaroid-photo-frame {
-            position: absolute;
-            background: #ffffff;
-            padding: 8px 8px 18px 8px;
-            box-shadow: 0 8px 22px rgba(45, 42, 37, 0.08);
-            border: 1px solid #f4f1ea;
-        }
-
-        .polaroid-frame-left {
-            width: 115px;
-            height: 125px;
-            left: -8px;
-            bottom: 5px;
-            transform: rotate(-7deg);
-            z-index: 4;
-        }
-
-        .polaroid-frame-right {
-            width: 120px;
-            height: 115px;
-            left: 95px;
-            bottom: -15px;
-            transform: rotate(5deg);
-            z-index: 4;
-        }
-
-        .polaroid-photo-frame img {
-            width: 100%;
-            height: 80%;
-            object-fit: cover;
-        }
-
-        /* Typography Text Styling Engine */
-        .section-label {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .headline-title {
-            font-family: var(--font-script);
-            font-size: 3.3rem;
-            color: var(--olive-accent);
-            line-height: 1;
-            margin-bottom: 15px;
-        }
-
-        .details-paragraph {
+        .expanded-details-panel p {
             font-size: 0.95rem;
             line-height: 1.6;
             color: var(--text-dark);
         }
-
-        .date-badge-lockup {
-            font-weight: 600;
-            font-size: 1.05rem;
-            border-top: 1px solid #e6dfd3;
-            border-bottom: 1px solid #e6dfd3;
-            padding: 8px 0;
-            margin: 18px auto;
-            width: 80%;
-            letter-spacing: 1px;
-            color: var(--olive-accent);
-        }
-
-        .location-venue-text {
+        
+        .venue-tag {
+            font-size: 0.85rem;
             font-style: italic;
             color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        /* ==========================================================================
-           RESPONSIVE VIEWPORT ENGINE TWEAKS
-           ========================================================================== */
-        @media (max-width: 400px) {
-            .envelope-wrapper {
-                height: 220px;
-            }
-            .device-viewport.is-open .invitation-card {
-                margin-top: -75px;
-            }
-            .collage-viewport-frame {
-                height: 250px;
-                transform: scale(0.92);
-            }
-            .headline-title {
-                font-size: 2.9rem;
-            }
+            margin-top: 5px;
+            display: block;
         }
     </style>
 </head>
 <body>
 
-    <div class="device-viewport" id="viewportEngine">
+    <!-- Emulated Mobile Device Housing -->
+    <div class="phone-viewport" id="appCanvas">
         
-        <!-- Phase 1 Armenian Text Prompt Overlay -->
-        <h2 class="interaction-prompt" id="promptOverlay">Սեղմեք՝ բացելու համար</h2>
+        <!-- Feature 2: Clean Elegant URL Header Branding -->
+        <div class="app-header-url">noy-lara.web.app</div>
 
-        <!-- The Interactive Closed/Open Envelope Architecture -->
-        <div class="envelope-wrapper" id="envelopeInteractiveContainer">
+        <!-- Dynamic Invitation Interaction Trigger Element -->
+        <div class="tap-instruction" id="tapText">Սեղմեք՝ բացելու համար</div>
+
+        <!-- Feature 3 & 4: Symmetrical Central Enclosure Cluster -->
+        <div class="envelope-cluster-root" id="envelopeContainer">
             
-            <!-- Dynamic 3D Top Flap Shield -->
-            <div class="env-layer env-flap-top"></div>
-            
-            <!-- Inside Invitation Elements -->
-            <div class="invitation-card">
-                <div class="card-content-cluster">
-                    
-                    <span class="section-label staggered-entry delay-1">Save The Date</span>
-                    
-                    <!-- Main Grid Collage Array -->
-                    <div class="collage-viewport-frame staggered-entry delay-2">
-                        
-                        <!-- Element 2: Vinyl Record Slot -->
-                        <div class="vinyl-record-wrapper">
-                            <img src="invitation-disk.jpg" alt="Vinyl Music Disk Record" class="vinyl-asset-media" onerror="this.src='https://picsum.photos/150/150?grayscale=1'">
-                        </div>
+            <!-- Structural Layer Backing Pocket -->
+            <div class="envelope-pocket-back"></div>
 
-                        <!-- Element 1: Small White Oval Monogram Frame -->
-                        <div class="oval-monogram-badge">
-                            <span class="monogram-char">N</span>
-                            <span class="monogram-ampersand">&</span>
-                            <span class="monogram-char">L</span>
-                        </div>
-
-                        <!-- Element 3: Main Save the Date Text Card -->
-                        <div class="main-save-date-panel">
-                            <img src="invitation-main.jpg" alt="Save The Date Card Graphics" onerror="this.src='https://picsum.photos/300/420?sepia=1'">
-                        </div>
-
-                        <!-- Foreground Image Stack (Two Polaroids Overlapping) -->
-                        <div class="polaroid-photo-frame polaroid-frame-left">
-                            <img src="couple-photo1.jpg" alt="Couple Portrait Capture 1" onerror="this.src='https://picsum.photos/160/160?blur=2'">
-                        </div>
-                        <div class="polaroid-photo-frame polaroid-frame-right">
-                            <img src="couple-photo2.jpg" alt="Couple Portrait Capture 2" onerror="this.src='https://picsum.photos/160/160?sepia=2'">
-                        </div>
-
-                    </div>
-
-                    <!-- Names, Timeline, and Location Data Details -->
-                    <h1 class="headline-title staggered-entry delay-3">Noy & Lara</h1>
-                    
-                    <p class="details-paragraph staggered-entry delay-4">
-                        Սիրով հրավիրում ենք ձեզ կիսելու մեր կյանքի ամենահիշարժան օրվա բերկրանը
-                        
-                        <div class="date-badge-lockup staggered-entry delay-4">
-                            ՕԳՈՍՏՈՍԻ 12, 2026
-                        </div>
-                        
-                        <span class="staggered-entry delay-4">Ժամը՝ 17:00-ին</span><br>
-                        <span class="location-venue-text staggered-entry delay-4">Հասցե՝ Ռեստորանային համալիր, Երևան</span>
-                    </p>
-
+            <!-- Pop-Out Element Array Cluster (Flies upwards out of card core) -->
+            <div class="invitation-inner-content">
+                
+                <!-- Vinyl Decorative Disc Element -->
+                <div class="vinyl-record-disc">
+                    <div class="vinyl-inner-label"></div>
                 </div>
+
+                <!-- Oval Initials Monogram Cluster -->
+                <div class="oval-monogram-badge">
+                    <span class="monogram-text">N</span>
+                    <span class="monogram-divider">&</span>
+                    <span class="monogram-text">L</span>
+                </div>
+
+                <!-- Main Save the Date Structural Rectangular Card -->
+                <div class="rect-save-date-card">
+                    <span class="card-std-tag">Save the date</span>
+                    <h2 class="card-names">Noy<br>&<br>Lara</h2>
+                    <div class="card-date">12 AUGUST 2025</div>
+                </div>
+
+                <!-- Stacked Polaroid Couple Photographic Layout Slots -->
+                <div class="polaroid-wrapper polaroid-left">
+                    <img src="photo1.jpg" alt="Couple Portrait One" onerror="this.src='https://picsum.photos/120/140?blur=3'">
+                </div>
+                
+                <div class="polaroid-wrapper polaroid-right">
+                    <img src="photo2.jpg" alt="Couple Portrait Two" onerror="this.src='https://picsum.photos/120/140?sepia=1'">
+                </div>
+
             </div>
 
-            <!-- Absolute Pouch Enclosures -->
-            <div class="env-layer env-flap-left"></div>
-            <div class="env-layer env-flap-right"></div>
-            <div class="env-layer env-flap-bottom"></div>
+            <!-- Foreground Pocket Enclosure Flaps -->
+            <div class="flap-piece left-fold"></div>
+            <div class="flap-piece right-fold"></div>
+            <div class="flap-piece bottom-fold"></div>
 
-            <!-- Monochromatic Champagne Wax Seal component from image_2.png -->
-            <div class="wax-seal" id="waxSealObject">
-                <div class="wax-seal-inner">✦</div>
-            </div>
-            
+            <!-- Feature 5: Top Folding Hinge Layer & Shadow Components -->
+            <div class="top-flap-hinge"></div>
+
+            <!-- Golden Initial Accent Wax Seal Layer -->
+            <div class="golden-wax-seal">N & L</div>
+
         </div>
+
+        <!-- Extended Detail Layout Module (Fades in neatly beneath cluster once opened) -->
+        <div class="expanded-details-panel">
+            <p>
+                Սիրով հրավիրում ենք ձեզ կիսելու մեր կյանքի ամենահիշարժան օրվա բերկրանքը
+                <span class="venue-tag">Ժամը՝ 17:00-ին, Ռեստորանային համալիր, Երևան</span>
+            </p>
+        </div>
+
     </div>
 
     <!-- ==========================================================================
-       LIGHTWEIGHT VANILLA APPLICATION STATE MOTOR
+       LIGHTWEIGHT PERFORMANCE STATE APPLICATION MOTOR
        ========================================================================== */ -->
     <script>
-        document.getElementById('envelopeInteractiveContainer').addEventListener('click', function() {
-            const viewport = document.getElementById('viewportEngine');
+        document.getElementById('appCanvas').addEventListener('click', function() {
+            const canvasElement = document.getElementById('appCanvas');
             
-            // Execute opening workflow sequences only if context is closed
-            if (!viewport.classList.contains('is-open')) {
-                viewport.classList.add('is-open');
-                
-                // Once transition ends, clean up active click cursors safely
-                setTimeout(() => {
-                    document.getElementById('envelopeInteractiveContainer').style.cursor = 'default';
-                }, 750);
+            // Toggle web presentation state model fluidly via classes
+            if (!canvasElement.classList.contains('is-open')) {
+                canvasElement.classList.add('is-open');
             }
         });
     </script>

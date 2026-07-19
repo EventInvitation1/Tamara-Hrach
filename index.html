@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wedding Invitation</title>
+    
+    <!-- Google Fonts for Elegant Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Great+Vibes&family=Noto+Serif+Armenian:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           COLOR PALETTE & CONFIGURATION (Easily editable)
+           ========================================================================== */
+        :root {
+            /* Background and Envelope Colors based on the visualization */
+            --bg-color: #eae7dc;         /* Soft, warm cream background */
+            --envelope-bg: #d8c3a5;     /* Main envelope body tone */
+            --envelope-dark: #bfa888;   /* Shadow/inner folds tone */
+            --envelope-flap: #e3d2ba;   /* Inside flap highlight tone */
+            --wax-seal-color: #6e5a44;  /* Deep elegant brown/olive wax seal */
+            
+            /* Typography Colors */
+            --text-primary: #3e362e;    /* Dark brown/charcoal for premium readability */
+            --text-muted: #8e7d6b;      /* Muted accent tone */
+            
+            /* Card & Details */
+            --card-bg: #fdfbf7;         /* Crisp, romantic off-white card stock */
+            
+            /* Fonts */
+            --font-serif: 'Playfair Display', 'Noto Serif Armenian', serif;
+            --font-script: 'Great Vibes', cursive;
+        }
+
+        /* ==========================================================================
+           BASE STYLES & RESET
+           ========================================================================== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            font-family: var(--font-serif);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            perspective: 1000px; /* Essential for 3D flap flip */
+            padding: 20px;
+        }
+
+        /* ==========================================================================
+           PHASE 1 & 2: THE ENVELOPE INTERACTION CONTAINER
+           ========================================================================== */
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 420px;
+            position: relative;
+        }
+
+        /* Pulse Invitation Text Overlay */
+        .instruction-text {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+            text-align: center;
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            animation: softPulse 2s infinite ease-in-out;
+        }
+
+        @keyframes softPulse {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+
+        /* The Envelope Base */
+        .envelope-container {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            background-color: var(--envelope-dark);
+            border-radius: 4px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.4s ease;
+        }
+
+        .envelope-container:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Common flap settings */
+        .flap {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            z-index: 3;
+        }
+
+        /* Top Flap (Flipped via JS/CSS) */
+        .top-flap {
+            top: 0;
+            left: 0;
+            border-width: 140px 210px 0 210px; /* Half of width (420px) and height (280px) */
+            border-color: var(--envelope-flap) transparent transparent transparent;
+            transform-origin: top center;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s 0.3s;
+            z-index: 5; /* Starts on top of everything */
+        }
+
+        /* Bottom & Side Folds (Creates the pouch) */
+        .left-flap {
+            bottom: 0;
+            left: 0;
+            border-width: 140px 0 140px 210px;
+            border-color: transparent transparent transparent var(--envelope-bg);
+        }
+
+        .right-flap {
+            bottom: 0;
+            right: 0;
+            border-width: 140px 210px 140px 0;
+            border-color: transparent var(--envelope-bg) transparent transparent;
+        }
+
+        .bottom-flap {
+            bottom: 0;
+            left: 0;
+            border-width: 0 210px 140px 210px;
+            border-color: transparent transparent var(--envelope-dark) transparent;
+        }
+
+        /* Wax Seal Badge */
+        .wax-seal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 50px;
+            height: 50px;
+            background-color: var(--wax-seal-color);
+            border-radius: 50%;
+            transform: translate(-50%, -40%);
+            z-index: 6;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2), inset 0 2px 4px rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 1.2rem;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        /* ==========================================================================
+           PHASE 3: THE CONTENT REVEAL CARD
+           ========================================================================== */
+        .invitation-card {
+            position: absolute;
+            top: 10px;
+            left: 5%;
+            width: 90%;
+            background-color: var(--card-bg);
+            border-radius: 2px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            padding: 30px 20px;
+            z-index: 2; /* Sits inside the pocket initially */
+            transform: translateY(0) scale(0.95);
+            opacity: 0;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+            max-height: 250px;
+            overflow: hidden;
+        }
+
+        /* ==========================================================================
+           OPEN STATE TRIGGER (Applied via JavaScript)
+           ========================================================================== */
+        .wrapper.is-open .instruction-text {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        .wrapper.is-open .top-flap {
+            transform: rotateX(180deg);
+            z-index: 1; /* Drop behind so the card can slide out */
+        }
+
+        .wrapper.is-open .wax-seal {
+            opacity: 0;
+            transform: translate(-50%, -40%) scale(0.7);
+            pointer-events: none;
+        }
+
+        /* The Grand Reveal: Moves the card upwards out of the envelope */
+        .wrapper.is-open .invitation-card {
+            opacity: 1;
+            position: relative; /* Break out of absolute envelope confinement */
+            top: auto;
+            left: auto;
+            width: 100%;
+            max-height: 2000px; /* Allow fully expanded layout */
+            transform: translateY(-40px) scale(1);
+            margin-top: -120px; /* Smooth spacing transition */
+            z-index: 10;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            animation: cardFadeInElements 1s ease forwards;
+        }
+        
+        /* Smooth scrolling container for mobile viewport constraints */
+        .wrapper.is-open {
+            padding-top: 120px;
+            padding-bottom: 50px;
+        }
+
+        /* ==========================================================================
+           ELEGANT CARD INTERIOR & TYPOGRAPHY
+           ========================================================================== */
+        .card-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .wrapper.is-open .card-inner {
+            animation: fadeInUp 0.8s 0.5s forwards;
+        }
+
+        /* Initials Slot (e.g. A & M) */
+        .initials-badge {
+            font-family: var(--font-serif);
+            font-size: 1.5rem;
+            font-weight: 300;
+            border: 1px solid var(--text-muted);
+            padding: 8px 20px;
+            border-radius: 50%;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            display: inline-block;
+        }
+
+        /* Primary Dynamic Image Slot */
+        .main-invitation-img {
+            width: 100%;
+            max-height: 380px;
+            object-fit: cover;
+            border-radius: 2px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Romantic Script Names */
+        .couple-names {
+            font-family: var(--font-script);
+            font-size: 3rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .details-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            letter-spacing: 0.5px;
+            margin-bottom: 25px;
+            color: var(--text-primary);
+        }
+
+        .date-highlight {
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-top: 1px solid #e0dcd5;
+            border-bottom: 1px solid #e0dcd5;
+            padding: 8px 0;
+            margin: 15px 0;
+            width: 80%;
+        }
+
+        /* Secondary Grid / Multi-photo Styling matching context layout */
+        .visual-decor-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* Secondary Vinyl/Disk Image Placeholder Slot */
+        .disk-invitation-img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            animation: spinDisk 20s linear infinite;
+        }
+
+        @keyframes spinDisk {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* ==========================================================================
+           ANIMATIONS & RESPONSIVE SCALING
+           ========================================================================== */
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hardware Accelerated Smooth Mobile Adaptation */
+        @media (max-width: 440px) {
+            .envelope-container {
+                height: 220px;
+            }
+            .top-flap { border-width: 110px 180px 0 180px; }
+            .left-flap { border-width: 110px 0 110px 180px; }
+            .right-flap { border-width: 110px 180px 110px 0; }
+            .bottom-flap { border-width: 0 180px 110px 180px; }
+            
+            .wrapper.is-open .invitation-card {
+                margin-top: -80px;
+            }
+            .couple-names { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="wrapper" id="invitationWrapper">
+        
+        <!-- Phase 1 Text Prompt -->
+        <div class="instruction-text" id="instruction">Սեղմեք՝ բացելու համար</div>
+
+        <!-- The Interactive Envelope Container -->
+        <div class="envelope-container" id="envelope">
+            
+            <!-- 3D Flipping Top Flap -->
+            <div class="flap top-flap"></div>
+            
+            <!-- Internal Invitation Card -->
+            <div class="invitation-card">
+                <div class="card-inner">
+                    
+                    <!-- 1. Couple Initials Slot -->
+                    <div class="initials-badge">N & L</div>
+                    
+                    <!-- 2. Main Invitation Graphic/Photo Slot -->
+                    <img src="invitation-main.jpg" alt="Wedding Celebration" class="main-invitation-img" onerror="this.src='https://picsum.photos/600/800?romantic=1'">
+                    
+                    <!-- Names & Details Section -->
+                    <h1 class="couple-names">Noy & Lara</h1>
+                    
+                    <div class="details-text">
+                        Սիրով հրավիրում ենք ձեզ կիսելու մեր կյանքի ամենահիշարժան օրվա բերկրանքը
+                        <div class="date-highlight">ՕԳՈՍՏՈՍԻ 12, 2026</div>
+                        Ժամը՝ 17:00-ին <br>
+                        Հասցե: Ռեստորանային համալիր, Երևան
+                    </div>
+
+                    <!-- 3. Decorative Secondary Grid Container (e.g. Vinyl / Accent details) -->
+                    <div class="visual-decor-container">
+                        <img src="invitation-disk.jpg" alt="Decorative Track" class="disk-invitation-img" onerror="this.src='https://picsum.photos/150/150?music=1'">
+                    </div>
+                    
+                </div>
+            </div>
+
+            <!-- Envelope Pocket Layers -->
+            <div class="flap left-flap"></div>
+            <div class="flap right-flap"></div>
+            <div class="flap bottom-flap"></div>
+
+            <!-- Wax Seal Component -->
+            <div class="wax-seal">✦</div>
+            
+        </div>
+    </div>
+
+    <!-- ==========================================================================
+       VANILLA JAVASCRIPT STATE ENGINE
+       ========================================================================== */ -->
+    <script>
+        document.getElementById('envelope').addEventListener('click', function() {
+            const wrapper = document.getElementById('invitationWrapper');
+            
+            // Only trigger state transformation if not already active
+            if (!wrapper.classList.contains('is-open')) {
+                wrapper.classList.add('is-open');
+                
+                // Allow card context to gracefully establish native scrolling room after slide animation completes
+                setTimeout(() => {
+                    document.getElementById('envelope').style.cursor = 'default';
+                }, 600);
+            }
+        });
+    </script>
+</body>
+</html>
